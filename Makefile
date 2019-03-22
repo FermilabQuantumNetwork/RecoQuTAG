@@ -1,28 +1,46 @@
+############################################################
+#
+#  Project:        quTAG User Library
+#
+#  Filename:       Makefile
+#
+#  Purpose:        GCC makefile for examples
+#
+#  Author:         N-Hands GmbH & Co KG
+#
+############################################################
+# $Id: makefile.lx,v 1.1 2017/12/14 12:50:37 trurl Exp $
+
 CXX = $(shell root-config --cxx)
-LD = $(shell root-config --ld)
+
 INC = $(shell pwd)
+LD = $(shell root-config --ld)
+CPPFLAGS := $(shell root-config --cflags) -I$(INC)/../inc
+LDFLAGS := $(shell root-config --glibs) $(STDLIBDIR)
 
-CPPFLAGS := $(shell root-config --cflags) -I$(INC)/include
-LDFLAGS := $(shell root-config --glibs) $(STDLIBDIR) -lRooFit -lRooFitCore
-CPPFLAGS += -g -std=c++14 -I$(INC)/include
+CPPFLAGS += -g 
 
-TARGET = RecoQuTAG
+TARGET = read_qutag
 
-SRC = app/qutag-readDataFile.cc
-OBJ = $(SRC:.cc=.o)
+SRC = read_qutag.cc
 
+OBJ = $(SRC:.c=.o)
 
-TARGETS = $(TARGET)
-
-all : $(TARGETS)
+all : $(TARGET)
 
 $(TARGET) : $(OBJ)
-	@echo $@
 	$(LD) $(CPPFLAGS) -o $(TARGET) $(OBJ) $(LDFLAGS)
-
-
-%.o : %.cc
 	@echo $@
+	@echo $<
+	@echo $^
+
+
+%.o : %.c
 	$(CXX) $(CPPFLAGS) -o $@ -c $<
-clean :
-	rm -rf *.o app/*.o src/*.o $(TARGET) *~ *.dSYM
+	@echo $@
+	@echo $<
+
+
+clean : 
+	rm -f *.o $(TARGET)
+
